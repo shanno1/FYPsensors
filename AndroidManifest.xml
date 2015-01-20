@@ -15,7 +15,7 @@
         android:name="android.hardware.sensor.gravity"
         android:required="true" />
     <uses-feature
-        android:name="android.hardware.sensor.gyroscope_calibrated"
+        android:name="android.hardware.sensor.gyroscope"
         android:required="true" />
 
     <application
@@ -47,6 +47,10 @@
         <activity
             android:name=".Gyroscrope"
             android:label="@string/title_activity_gyroscrope" >
+        </activity>
+        <activity
+            android:name=".Add_Exercise"
+            android:label="@string/title_activity_add__exercise" >
         </activity>
     </application>
 

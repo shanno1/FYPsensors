@@ -7,96 +7,12 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.sensorsfyp.Menu" >
-    <TextView
-        android:id="@+id/Acceleration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:text="Accelerometer" />
 
-    <TextView
-        android:id="@+id/AccX"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/Acceleration"
-        android:text="X:" />
-    <TextView
-        android:id="@+id/AccY"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/AccX"
-        android:text="Y:" />
-    <TextView
-        android:id="@+id/AccZ"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/AccY"
-        android:text="Z:" />
-
-    <TextView
-        android:id="@+id/OrX"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/Orientation"
-        android:text="X:" />
-    <TextView
-        android:id="@+id/OrY"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/OrX"
-        android:text="Y:" />
-    <TextView
-        android:id="@+id/OrZ"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/OrY"
-        android:text="Z:" />
-
-    <TextView
-        android:id="@+id/Orientation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/AccZ"
-        android:layout_below="@+id/AccZ"
-        android:layout_marginTop="20dp"
-        android:text="Orientation" />
-    
-    <TextView
-        android:id="@+id/MagX"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Acceleration"
-        android:layout_below="@+id/Magnetic"
-        android:text="X:" />
-<TextView
-        android:id="@+id/MagY"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Magnetic"
-        android:layout_below="@+id/MagX"
-        android:text="Y:" />
-<TextView
-        android:id="@+id/MagZ"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/Magnetic"
-        android:layout_below="@+id/MagY"
-        android:text="Z:" />
-
-<TextView
-    android:id="@+id/Magnetic"
+<Button
+    android:id="@+id/addexercise"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignLeft="@+id/MagX"
-    android:layout_below="@+id/OrZ"
-    android:layout_marginTop="22dp"
-    android:text="Geomagnetic" />
+    android:layout_marginTop="38dp"
+    android:text="Add Exercise" />
 
 </RelativeLayout>
