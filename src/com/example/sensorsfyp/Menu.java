@@ -10,6 +10,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,13 +35,12 @@ public class Menu extends ActionBarActivity{
             @Override
             public void onClick(View v) {
                
-            	
+               Intent intent = new Intent(Menu.this, Add_Exercise.class);
+               startActivity(intent);
             }
         });
     }
-   
-        
-    }
+}
 
 
 /*public void startsensor(){

@@ -1660,8 +1660,8 @@ containing a value of this type.
         public static final int always=0x7f090014;
         public static final int beginning=0x7f09001b;
         public static final int bottom=0x7f09001e;
-        public static final int buttonCancel=0x7f090047;
-        public static final int buttonSave=0x7f090049;
+        public static final int buttonCancel=0x7f090049;
+        public static final int buttonSave=0x7f090048;
         public static final int checkbox=0x7f09002b;
         public static final int collapseActionView=0x7f090015;
         public static final int decor_content_parent=0x7f090031;
@@ -1670,6 +1670,7 @@ containing a value of this type.
         public static final int disableHome=0x7f09000d;
         public static final int dropdown=0x7f09001a;
         public static final int edit_query=0x7f090035;
+        public static final int elapsedtime=0x7f09004a;
         public static final int end=0x7f09001c;
         public static final int expand_activities_button=0x7f090024;
         public static final int expanded_menu=0x7f09002a;
@@ -1684,7 +1685,6 @@ containing a value of this type.
         public static final int never=0x7f090017;
         public static final int none=0x7f09000f;
         public static final int normal=0x7f09000b;
-        public static final int progressBar1=0x7f090048;
         public static final int progressBarTimer=0x7f090045;
         public static final int progress_circular=0x7f090007;
         public static final int progress_horizontal=0x7f090008;
@@ -1706,7 +1706,7 @@ containing a value of this type.
         public static final int split_action_bar=0x7f090004;
         public static final int submit_area=0x7f09003e;
         public static final int tabMode=0x7f09000c;
-        public static final int textNote=0x7f09004a;
+        public static final int textNote=0x7f090047;
         public static final int title=0x7f090029;
         public static final int top=0x7f09001f;
         public static final int up=0x7f090001;

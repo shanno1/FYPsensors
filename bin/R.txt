@@ -358,8 +358,8 @@ int id addexercise 0x7f09004b
 int id always 0x7f090014
 int id beginning 0x7f09001b
 int id bottom 0x7f09001e
-int id buttonCancel 0x7f090047
-int id buttonSave 0x7f090049
+int id buttonCancel 0x7f090049
+int id buttonSave 0x7f090048
 int id checkbox 0x7f09002b
 int id collapseActionView 0x7f090015
 int id decor_content_parent 0x7f090031
@@ -368,6 +368,7 @@ int id dialog 0x7f090019
 int id disableHome 0x7f09000d
 int id dropdown 0x7f09001a
 int id edit_query 0x7f090035
+int id elapsedtime 0x7f09004a
 int id end 0x7f09001c
 int id expand_activities_button 0x7f090024
 int id expanded_menu 0x7f09002a
@@ -382,7 +383,6 @@ int id middle 0x7f09001d
 int id never 0x7f090017
 int id none 0x7f09000f
 int id normal 0x7f09000b
-int id progressBar1 0x7f090048
 int id progressBarTimer 0x7f090045
 int id progress_circular 0x7f090007
 int id progress_horizontal 0x7f090008
@@ -404,7 +404,7 @@ int id showTitle 0x7f090012
 int id split_action_bar 0x7f090004
 int id submit_area 0x7f09003e
 int id tabMode 0x7f09000c
-int id textNote 0x7f09004a
+int id textNote 0x7f090047
 int id title 0x7f090029
 int id top 0x7f09001f
 int id up 0x7f090001

@@ -54,7 +54,7 @@ public class DBmanager extends SQLiteOpenHelper {
 		      EXER_VAL_COLUMN_LIN_Z+" real,"+
 		      EXER_VAL_COLUMN_GYRO_X+" real,"+
 		      EXER_VAL_COLUMN_GYRO_Y+" real,"+
-		      EXER_VAL_COLUMN_GYRO_Z+" real,"
+		      EXER_VAL_COLUMN_GYRO_Z+" real"
 		      +")"
 	      );
 	      
@@ -84,16 +84,17 @@ public class DBmanager extends SQLiteOpenHelper {
 	      contentValues.put("description", description);	
 	
 	      db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
+	      db.close();
 	      return true;
 	   }
-	   public boolean insertToExerciseSample(String name, String description, float rot_x,float rot_y, 
+	   public boolean insertToExerciseSample(String name, int seq, float rot_x,float rot_y, 
 			   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
 	   {
 	      SQLiteDatabase db = this.getWritableDatabase();
 	      ContentValues contentValues = new ContentValues();
 	      
 	      contentValues.put(EXER_VAL_COLUMN_NAME, name);
-	      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, description);
+	      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
 	      contentValues.put(EXER_VAL_COLUMN_ROT_X, rot_x);
 	      contentValues.put(EXER_VAL_COLUMN_ROT_Y, rot_y);
 	      contentValues.put(EXER_VAL_COLUMN_ROT_Z, rot_z);
@@ -106,6 +107,7 @@ public class DBmanager extends SQLiteOpenHelper {
 	      
 	
 	      db.insert(EXER_TABLE_NAME, null, contentValues);
+	      db.close(); 
 	      return true;
 	   }
 	   public Cursor customQuery(String selectsomething,String fromtable,String wheresomething,int equalsomethingelse){
@@ -114,16 +116,23 @@ public class DBmanager extends SQLiteOpenHelper {
 	      return res;
 	   }
 	   
-	   public boolean updateTable(String tablename,Integer id, String name, String phone, String email, String street,String place)
+	   public boolean updateExerciseSamples(int id, String name, int seq, float rot_x,float rot_y, 
+			   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
 	   {
 	      SQLiteDatabase db = this.getWritableDatabase();
 	      ContentValues contentValues = new ContentValues();
-	      contentValues.put("name", name);
-	      contentValues.put("phone", phone);
-	      contentValues.put("email", email);
-	      contentValues.put("street", street);
-	      contentValues.put("place", place);
-	      db.update(tablename, contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+	      contentValues.put(EXER_VAL_COLUMN_NAME, name);
+	      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
+	      contentValues.put(EXER_VAL_COLUMN_ROT_X, rot_x);
+	      contentValues.put(EXER_VAL_COLUMN_ROT_Y, rot_y);
+	      contentValues.put(EXER_VAL_COLUMN_ROT_Z, rot_z);
+	      contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
+	      contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
+	      contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
+	      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
+	      contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
+	      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
+	      db.update(EXER_TABLE_NAME, contentValues, "id = ?", new String[] { Integer.toString(id) } );
 	      return true;
 	   }
 	

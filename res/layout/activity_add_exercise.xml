@@ -52,24 +52,6 @@
         android:layout_alignRight="@+id/StartRecording"
         android:layout_below="@+id/StartRecording" />
 
-    <Button
-        android:id="@+id/buttonCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/progressBar1"
-        android:layout_below="@+id/progressBar1"
-        android:layout_marginTop="52dp"
-        android:text="Cancel" />
-
-    <Button
-        android:id="@+id/buttonSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/buttonCancel"
-        android:layout_alignBottom="@+id/buttonCancel"
-        android:layout_toRightOf="@+id/ExerciseDescriptiontitle"
-        android:text="Save" />
-
     <TextView
         android:id="@+id/textNote"
         android:layout_width="wrap_content"
@@ -88,5 +70,32 @@
         android:layout_below="@+id/textNote"
         android:layout_marginTop="15dp"
         android:text="Start Recording Exercise" />
+
+    <Button
+        android:id="@+id/buttonCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/progressBarTimer"
+        android:layout_alignParentBottom="true"
+        android:text="Cancel" />
+
+    <Button
+        android:id="@+id/buttonSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/buttonCancel"
+        android:layout_alignBottom="@+id/buttonCancel"
+        android:layout_toRightOf="@+id/ExerciseDescriptiontitle"
+        android:text="Save" />
+
+    <TextView
+        android:id="@+id/elapsedtime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/buttonCancel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="46dp"
+        android:text="0"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

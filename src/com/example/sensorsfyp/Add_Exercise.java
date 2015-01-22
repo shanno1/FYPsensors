@@ -12,6 +12,8 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +26,7 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	private SensorManager mSensorManager;
 	private ProgressBar timerBar;
 	private Sensor mSensor;
+	private TextView elapsedtext;
 	private float timeConstant = 0.18f;
 	private float alpha = 0.9f;
 	private float dt = 0;
@@ -32,11 +35,12 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	long elapsedTime = System.currentTimeMillis() - startTime;
 	long elapsedSeconds = elapsedTime / 1000;
 	private Boolean recording=false;
-	 
+	TimerCountdown countdown;
+	
 	// Timestamps for the low-pass filters
 	private float timestamp = System.nanoTime();
 	private float timestampOld = System.nanoTime();
-	
+	Handler handler=new Handler();
 	private DecimalFormat df = new DecimalFormat("#.###");
 	// Gravity and linear accelerations components for the Wikipedia version of the low-pass filter 
 	private float[] gravity = new float[]
@@ -59,70 +63,66 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		
-		
+		elapsedtext = (TextView)findViewById(R.id.elapsedtime);
 		SaveBtn = (Button)findViewById(R.id.buttonSave);
 		CancelBtn = (Button)findViewById(R.id.buttonCancel);
 		Record = (Button)findViewById(R.id.StartRecording);
 		
 		timerBar = (ProgressBar)findViewById(R.id.progressBarTimer);
-		timerBar.setMax(5);
 		//GETTING LATE CURRENTLY REVISE OVER LOGIC!
 		Record.setOnClickListener(new OnClickListener(){
 			 @Override
-	            public void onClick(View v) {
-	               if(!recording){
-	            	   startsensor();
-	            	   Record.setText("Stop Recording Exercise");
-	            	   recording=true;
-	            	   startTime = System.currentTimeMillis();
-	               }
-	               else{
-	            	   stopsensor();
-	            	   Record.setText("Start Recording Exercise");
-	            	   recording=false;
-	            	   timerBar.setProgress(0);
-	               }
+			 public void onClick(View v) {
+				 if(!recording){
+					 startsensor();
+	            	 Record.setText("Stop Recording Exercise");
+	            	 recording=true;
+	            	 timerBar.setProgress(100);
+	            	 countdown =  new TimerCountdown(500, 100);
+	            	 countdown.start();
+	             }
+	             else{
+	            	 stopsensor();
+	            	 countdown.onFinish();
+	            	 Record.setText("Start Recording Exercise");
+	            	 recording=false;
 	            	
-	            }
+	             }
+			 }
 		});
-		elapsedTime = System.currentTimeMillis() - startTime;
-  	   	elapsedSeconds = elapsedTime / 1000;
-  	   	timerBar.setProgress((int)elapsedSeconds);
-  	   	if(elapsedSeconds==5){
-  	   		stopsensor();
-  	   		timerBar.setProgress((int)elapsedSeconds);
-  	   }
 	}
 	
-	   public void startsensor(){
-	    	mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 200000); 
-	        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 200000); 
-	        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), 200000);
-	    }
-	    public void stopsensor(){
-	   	 	mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); 
-	        mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); 
-	        mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR));
-	   }
+	public void startsensor(){
+	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 100000); 
+	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 100000); 
+	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), 100000);
+	}
+	public void stopsensor(){
+		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); 
+	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); 
+	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR));
+	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add__exercise, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+	public class TimerCountdown extends CountDownTimer {
+   	
+		 public TimerCountdown(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+			// TODO Auto-generated constructor stub
+		 }
+		 
+		  @Override
+		  public void onTick(long millisUntilFinished) {
+			  int progress = (int) (millisUntilFinished/100);
+			  timerBar.setProgress(progress);
+		  }
+		 
+		  @Override
+		  public void onFinish() {
+			  elapsedtext.setText("Finished");
+			  timerBar.setProgress(0);
+		  }
+	 }  
+		 
 
 	@SuppressLint("NewApi") public void onSensorChanged(SensorEvent event){
     	float[] accelerometervalues;
@@ -150,9 +150,7 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	        orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
 	        orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
 	        orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
-        	
 		}
-        
     }
 
 	@Override
