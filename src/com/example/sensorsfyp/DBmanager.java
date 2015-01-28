@@ -3,11 +3,12 @@ package com.example.sensorsfyp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-public class DBmanager extends SQLiteOpenHelper {
+public class DBmanager {
 
 	//Sensor data table 
 	public static final String DATABASE_NAME = "Exercise.db";
@@ -33,113 +34,139 @@ public class DBmanager extends SQLiteOpenHelper {
    	
    	
 
-   	public DBmanager(Context context)
-   	{
-      super(context, DATABASE_NAME , null, 1);
-   	}
+    // other attributes
+    private final Context  context; 
+    private MyDatabaseHelper DBHelper;
+    private SQLiteDatabase db;
+
+    // 
+    public DBmanager(Context ctx) 
+    {
+    	this.context = ctx;
+        DBHelper = new MyDatabaseHelper(context);
+        open();
+        
+    }//End constructor
+  
+	static class MyDatabaseHelper extends SQLiteOpenHelper {
+    	MyDatabaseHelper(Context context){
+    		super(context, DATABASE_NAME, null, 1);
+    		
+    	}//End MyDatabaseHelper
+	    
+    	@Override
+ 	    public void onCreate(SQLiteDatabase db) {
+	 	      // TODO Auto-generated method stub
+	 	      db.execSQL(
+	 		      "create table " + EXER_VAL_TABLE_NAME +
+	 		      "(id integer primary key,"+
+	 		      EXER_VAL_COLUMN_NAME +" text,"+
+	 		      EXER_VAL_COLUMN_SEQUENCE+" integer,"+
+	 		      EXER_VAL_COLUMN_ROT_X+" real,"+
+	 		      EXER_VAL_COLUMN_ROT_Y+" real,"+
+	 		      EXER_VAL_COLUMN_ROT_Z+" real,"+
+	 		      EXER_VAL_COLUMN_LIN_X+" real,"+
+	 		      EXER_VAL_COLUMN_LIN_Y+" real,"+
+	 		      EXER_VAL_COLUMN_LIN_Z+" real,"+
+	 		      EXER_VAL_COLUMN_GYRO_X+" real,"+
+	 		      EXER_VAL_COLUMN_GYRO_Y+" real,"+
+	 		      EXER_VAL_COLUMN_GYRO_Z+" real"
+	 		      +")"
+	 	      );
+	 	      
+	 	      db.execSQL(
+	 	    	"create table " + EXER_TABLE_NAME +
+	 	    	"("+EXER_COLUMN_ID+" integer primary key,"+
+	 	    	EXER_COLUMN_NAME +" text,"+
+	 	    	EXER_COLUMN_DESCRIPTION+" text,"
+	 	    	+")");
+	    }
+	    	     
+	       @Override
+		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		    // TODO Auto-generated method stub
+			db.execSQL("DROP TABLE IF EXISTS exercises");
+			onCreate(db);
+		}
 	
-	   	@Override
-	   public void onCreate(SQLiteDatabase db) {
-	      // TODO Auto-generated method stub
-	      db.execSQL(
-		      "create table " + EXER_VAL_TABLE_NAME +
-		      "(id integer primary key,"+
-		      EXER_VAL_COLUMN_NAME +" text,"+
-		      EXER_VAL_COLUMN_SEQUENCE+" integer,"+
-		      EXER_VAL_COLUMN_ROT_X+" real,"+
-		      EXER_VAL_COLUMN_ROT_Y+" real,"+
-		      EXER_VAL_COLUMN_ROT_Z+" real,"+
-		      EXER_VAL_COLUMN_LIN_X+" real,"+
-		      EXER_VAL_COLUMN_LIN_Y+" real,"+
-		      EXER_VAL_COLUMN_LIN_Z+" real,"+
-		      EXER_VAL_COLUMN_GYRO_X+" real,"+
-		      EXER_VAL_COLUMN_GYRO_Y+" real,"+
-		      EXER_VAL_COLUMN_GYRO_Z+" real"
-		      +")"
-	      );
-	      
-	      db.execSQL(
-		      "create table " + EXER_TABLE_NAME +
-		      "("+EXER_COLUMN_ID+" integer primary key,"+
-		      EXER_COLUMN_NAME +" text,"+
-		      EXER_COLUMN_DESCRIPTION+" text,"
-		      +")"
-	      );
-	      
-	   }
+	}//End inner class MyDatabaseHelper
 	
-	   @Override
-	   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-	      // TODO Auto-generated method stub
-	      db.execSQL("DROP TABLE IF EXISTS exercises");
-	      onCreate(db);
-	   }
-	
-	   public boolean insertToExercise(String name, String description)
-	   {
-	      SQLiteDatabase db = this.getWritableDatabase();
-	      ContentValues contentValues = new ContentValues();
-	
-	      contentValues.put("name", name);
-	      contentValues.put("description", description);	
-	
-	      db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
-	      db.close();
-	      return true;
-	   }
-	   public boolean insertToExerciseSample(String name, int seq, float rot_x,float rot_y, 
-			   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
-	   {
-	      SQLiteDatabase db = this.getWritableDatabase();
-	      ContentValues contentValues = new ContentValues();
-	      
-	      contentValues.put(EXER_VAL_COLUMN_NAME, name);
-	      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
-	      contentValues.put(EXER_VAL_COLUMN_ROT_X, rot_x);
-	      contentValues.put(EXER_VAL_COLUMN_ROT_Y, rot_y);
-	      contentValues.put(EXER_VAL_COLUMN_ROT_Z, rot_z);
-	      contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
-	      contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
-	      contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
-	      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
-	      contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
-	      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
-	      
-	
-	      db.insert(EXER_TABLE_NAME, null, contentValues);
-	      db.close(); 
-	      return true;
-	   }
-	   public Cursor customQuery(String selectsomething,String fromtable,String wheresomething,int equalsomethingelse){
-	      SQLiteDatabase db = this.getReadableDatabase();
-	      Cursor res =  db.rawQuery( "select "+selectsomething+" from "+fromtable+" where "+wheresomething+"="+equalsomethingelse, null );
-	      return res;
-	   }
+	public DBmanager open() throws SQLException{
+    	db = DBHelper.getWritableDatabase();
+    	return this;
+    }//End SampleDBManager open()
+    
+    public void close(){
+    	DBHelper.close();
+    }//End close DBHelper method
+    
+	    
 	   
-	   public boolean updateExerciseSamples(int id, String name, int seq, float rot_x,float rot_y, 
-			   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
-	   {
-	      SQLiteDatabase db = this.getWritableDatabase();
-	      ContentValues contentValues = new ContentValues();
-	      contentValues.put(EXER_VAL_COLUMN_NAME, name);
-	      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
-	      contentValues.put(EXER_VAL_COLUMN_ROT_X, rot_x);
-	      contentValues.put(EXER_VAL_COLUMN_ROT_Y, rot_y);
-	      contentValues.put(EXER_VAL_COLUMN_ROT_Z, rot_z);
-	      contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
-	      contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
-	      contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
-	      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
-	      contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
-	      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
-	      db.update(EXER_TABLE_NAME, contentValues, "id = ?", new String[] { Integer.toString(id) } );
-	      return true;
-	   }
-	
-	   public Integer deleteTableRow(String table,Integer id)
-	   {
-	      SQLiteDatabase db = this.getWritableDatabase();
-	      return db.delete(table, "id = ? ", new String[] { Integer.toString(id) });
-	   }
-	
-	}
+   public boolean insertToExercise(String name, String description)
+   {
+      ContentValues contentValues = new ContentValues();
+
+      contentValues.put("name", name);
+      contentValues.put("description", description);	
+
+      db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
+      db.close();
+      return true;
+   }
+   public boolean insertToExerciseSample(String name, int seq, float rot_x,float rot_y, 
+		   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
+   {
+      
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(EXER_VAL_COLUMN_NAME, name);
+      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
+      contentValues.put(EXER_VAL_COLUMN_ROT_X, rot_x);
+      contentValues.put(EXER_VAL_COLUMN_ROT_Y, rot_y);
+      contentValues.put(EXER_VAL_COLUMN_ROT_Z, rot_z);
+      contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
+      contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
+      contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
+      
+
+      db.insert(EXER_TABLE_NAME, null, contentValues);
+      db.close(); 
+      return true;
+   }
+   public Cursor customQuery(String selectsomething,String fromtable,String wheresomething,int equalsomethingelse){
+      
+      Cursor res =  db.rawQuery( "select "+selectsomething+" from "+fromtable+" where "+wheresomething+"="+equalsomethingelse, null );
+      return res;
+   }
+   
+   public boolean updateExerciseSamples(int id, String name, int seq, float rot_x,float rot_y, 
+		   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
+   {
+	      
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(EXER_VAL_COLUMN_NAME, name);
+      contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
+      contentValues.put(EXER_VAL_COLUMN_ROT_X, rot_x);
+      contentValues.put(EXER_VAL_COLUMN_ROT_Y, rot_y);
+      contentValues.put(EXER_VAL_COLUMN_ROT_Z, rot_z);
+      contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
+      contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
+      contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
+      db.update(EXER_TABLE_NAME, contentValues, "id = ?", new String[] { Integer.toString(id) } );
+      return true;
+   }
+
+   public Integer deleteTableRow(String table,Integer id)
+   {
+     
+      return db.delete(table, "id = ? ", new String[] { Integer.toString(id) });
+   }
+
+
+
+}

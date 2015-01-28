@@ -8,5 +8,7 @@
     <string name="title_activity_gyroscrope">Gyroscrope</string>
     <string name="title_activity_add__exercise">Add_Exercise</string>
     <string name="exercise_name_">EXERCISE NAME:</string>
+    <string name="title_activity_view_exercise">ViewExercise</string>
+    <string name="title_activity_exercise_list">ExerciseList</string>
 
 </resources>

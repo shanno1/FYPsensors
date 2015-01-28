@@ -36,6 +36,14 @@
             android:name=".Add_Exercise"
             android:label="@string/title_activity_add__exercise" >
         </activity>
+        <activity
+            android:name=".ViewExercise"
+            android:label="@string/title_activity_view_exercise" >
+        </activity>
+        <activity
+            android:name=".ExerciseList"
+            android:label="@string/title_activity_exercise_list" >
+        </activity>
     </application>
 
 </manifest>

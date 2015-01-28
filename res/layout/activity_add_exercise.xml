@@ -1,101 +1,108 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.sensorsfyp.Add_Exercise" >
+    android:layout_alignParentLeft="true"
+    android:layout_alignTop="@+id/StartRecording"
+    android:layout_marginTop="44dp" >
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            >
 
-    <TextView
-        android:id="@+id/ExerciseNametitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/exercise_name_" />
+		    <TextView
+		        android:id="@+id/ExerciseNametitle"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/exercise_name_" />
+		
+		    <EditText
+		        android:id="@+id/ExerciseName"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/ExerciseNametitle"
+		        android:layout_below="@+id/ExerciseNametitle"
+		        android:ems="14"
+		        android:inputType="textCapCharacters" >
+		
+		        <requestFocus />
+		    </EditText>
+		
+		    <TextView
+		        android:id="@+id/ExerciseDescriptiontitle"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/ExerciseName"
+		        android:layout_below="@+id/ExerciseName"
+		        android:text="EXERCISE DESCRIPTION:" />
+		
+		    <EditText
+		        android:id="@+id/ExerciseDescription"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/ExerciseDescriptiontitle"
+		        android:layout_below="@+id/ExerciseDescriptiontitle"
+		        android:ems="14"
+		        android:inputType="textCapCharacters" />
+		
+		    <ProgressBar
+		        android:id="@+id/progressBarTimer"
+		        style="?android:attr/progressBarStyleHorizontal"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/StartRecording"
+		        android:layout_alignRight="@+id/StartRecording"
+		        android:layout_below="@+id/StartRecording" />
+		
+		    <TextView
+		        android:id="@+id/textNote"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/ExerciseDescription"
+		        android:layout_below="@+id/ExerciseDescription"
+		        android:layout_marginTop="14dp"
+		        android:text="NOTE: This has a limit of 5 seconds to perform the movement, remember it does not need to be rushed! Slow and controlled movements with correct composure."
+		        android:textAppearance="?android:attr/textAppearanceSmall" />
+		
+		    <Button
+		        android:id="@+id/StartRecording"
+		        android:layout_width="200dp"
+		        android:layout_height="100dp"
+		        android:layout_alignRight="@+id/buttonSave"
+		        android:layout_below="@+id/textNote"
+		        android:layout_marginTop="15dp"
+		        android:text="Start Recording Exercise" />
+		
+		    <Button
+		        android:id="@+id/buttonCancel"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignLeft="@+id/progressBarTimer"
+		        android:layout_alignParentBottom="true"
+		        android:text="Cancel" />
 
-    <EditText
-        android:id="@+id/ExerciseName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ExerciseNametitle"
-        android:layout_below="@+id/ExerciseNametitle"
-        android:ems="14"
-        android:inputType="textCapCharacters" >
+		    <TextView
+		        android:id="@+id/elapsedtime"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
+		        android:layout_centerHorizontal="true"
+		        android:text="0"
+		        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <requestFocus />
-    </EditText>
+		    <Button
+		        android:id="@+id/buttonSave"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentBottom="true"
+		        android:layout_toRightOf="@+id/ExerciseDescriptiontitle"
+		        android:text="Save" />
 
-    <TextView
-        android:id="@+id/ExerciseDescriptiontitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ExerciseName"
-        android:layout_below="@+id/ExerciseName"
-        android:text="EXERCISE DESCRIPTION:" />
+		</RelativeLayout>
+    </ScrollView>
 
-    <EditText
-        android:id="@+id/ExerciseDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ExerciseDescriptiontitle"
-        android:layout_below="@+id/ExerciseDescriptiontitle"
-        android:ems="14"
-        android:inputType="textCapCharacters" />
-
-    <ProgressBar
-        android:id="@+id/progressBarTimer"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/StartRecording"
-        android:layout_alignRight="@+id/StartRecording"
-        android:layout_below="@+id/StartRecording" />
-
-    <TextView
-        android:id="@+id/textNote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ExerciseDescription"
-        android:layout_below="@+id/ExerciseDescription"
-        android:layout_marginTop="14dp"
-        android:text="NOTE: This has a limit of 5 seconds to perform the movement, remember it does not need to be rushed! Slow and controlled movements with correct composure."
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <Button
-        android:id="@+id/StartRecording"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:layout_alignRight="@+id/buttonSave"
-        android:layout_below="@+id/textNote"
-        android:layout_marginTop="15dp"
-        android:text="Start Recording Exercise" />
-
-    <Button
-        android:id="@+id/buttonCancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/progressBarTimer"
-        android:layout_alignParentBottom="true"
-        android:text="Cancel" />
-
-    <Button
-        android:id="@+id/buttonSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/buttonCancel"
-        android:layout_alignBottom="@+id/buttonCancel"
-        android:layout_toRightOf="@+id/ExerciseDescriptiontitle"
-        android:text="Save" />
-
-    <TextView
-        android:id="@+id/elapsedtime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/buttonCancel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="46dp"
-        android:text="0"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-</RelativeLayout>
