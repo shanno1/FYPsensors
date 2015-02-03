@@ -5,35 +5,57 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DBmanager {
 
 	//Sensor data table 
-	public static final String DATABASE_NAME = "Exercise.db";
-	public static final String EXER_VAL_TABLE_NAME = "exercise_samples";
-	public static final String EXER_VAL_COLUMN_ID = "id";
-	public static final String EXER_VAL_COLUMN_NAME = "exercise_name";
+	public static final String DATABASE_NAME = "Exercises";
+	public static final String EXER_VAL_TABLE_NAME = "exercisesamples";
+	public static final String EXER_VAL_COLUMN_ID = "_id";
+	public static final String EXER_VAL_COLUMN_NAME = "name";
 	public static final String EXER_VAL_COLUMN_SEQUENCE = "sequence";
-	public static final String EXER_VAL_COLUMN_ROT_X = "rotation_vec_x";
-	public static final String EXER_VAL_COLUMN_ROT_Y = "rotation_vec_y";
-	public static final String EXER_VAL_COLUMN_ROT_Z = "rotation_vec_z";
-	public static final String EXER_VAL_COLUMN_LIN_X = "linear_vec_x";
-	public static final String EXER_VAL_COLUMN_LIN_Y = "linear_vec_y";
-	public static final String EXER_VAL_COLUMN_LIN_Z = "linear_vec_z";
-	public static final String EXER_VAL_COLUMN_GYRO_X = "gyroscope_x";
-	public static final String EXER_VAL_COLUMN_GYRO_Y = "gyroscope_y";
-	public static final String EXER_VAL_COLUMN_GYRO_Z = "gyroscope_z";
+	public static final String EXER_VAL_COLUMN_ROT_X = "rot_x";
+	public static final String EXER_VAL_COLUMN_ROT_Y = "rot_y";
+	public static final String EXER_VAL_COLUMN_ROT_Z = "rot_z";
+	public static final String EXER_VAL_COLUMN_LIN_X = "lin_x";
+	public static final String EXER_VAL_COLUMN_LIN_Y = "lin_y";
+	public static final String EXER_VAL_COLUMN_LIN_Z = "lin_z";
+	public static final String EXER_VAL_COLUMN_GYRO_X = "gyro_x";
+	public static final String EXER_VAL_COLUMN_GYRO_Y = "gyro_y";
+	public static final String EXER_VAL_COLUMN_GYRO_Z = "gyro_z";
+	public static final int DATABASE_VERSION = 1;
 	
 	//List of exercises table
-	public static final String EXER_TABLE_NAME = "exercises";
-   	public static final String EXER_COLUMN_ID = "id";
+	public static final String EXER_TABLE_NAME = "exercisedesc";
+   	public static final String EXER_COLUMN_ID = "_id";
    	public static final String EXER_COLUMN_NAME = "name";
    	public static final String EXER_COLUMN_DESCRIPTION = "description";
    	
-   	
+   	//create tables
+   	public static final String DB_EXERCISE_SAMPLES = 
+		"CREATE TABLE " + EXER_VAL_TABLE_NAME +
+	    "(_id INTEGER PRIMARY KEY AUTOINCREMENT, "+
+	    EXER_VAL_COLUMN_NAME +" TEXT NOT NULL, "+
+	    EXER_VAL_COLUMN_SEQUENCE+" INTEGER NOT NULL, "+
+	    EXER_VAL_COLUMN_ROT_X+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_ROT_Y+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_ROT_Z+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_LIN_X+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_LIN_Y+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_LIN_Z+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_GYRO_X+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_GYRO_Y+" REAL NOT NULL, "+
+	    EXER_VAL_COLUMN_GYRO_Z+" REAL NOT NULL);";
 
+	public static final String DB_EXERCISE =
+    	"create table " + EXER_TABLE_NAME +" ("
+    	+EXER_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+    	EXER_COLUMN_NAME +" TEXT NOT NULL, "+
+    	EXER_COLUMN_DESCRIPTION+" TEXT NOT NULL);";
     // other attributes
     private final Context  context; 
     private MyDatabaseHelper DBHelper;
@@ -43,55 +65,36 @@ public class DBmanager {
     public DBmanager(Context ctx) 
     {
     	this.context = ctx;
-        DBHelper = new MyDatabaseHelper(context);
-        open();
         
     }//End constructor
   
 	static class MyDatabaseHelper extends SQLiteOpenHelper {
     	MyDatabaseHelper(Context context){
-    		super(context, DATABASE_NAME, null, 1);
+    		super(context, DATABASE_NAME, null, DATABASE_VERSION);
     		
     	}//End MyDatabaseHelper
 	    
     	@Override
  	    public void onCreate(SQLiteDatabase db) {
 	 	      // TODO Auto-generated method stub
-	 	      db.execSQL(
-	 		      "create table " + EXER_VAL_TABLE_NAME +
-	 		      "(id integer primary key,"+
-	 		      EXER_VAL_COLUMN_NAME +" text,"+
-	 		      EXER_VAL_COLUMN_SEQUENCE+" integer,"+
-	 		      EXER_VAL_COLUMN_ROT_X+" real,"+
-	 		      EXER_VAL_COLUMN_ROT_Y+" real,"+
-	 		      EXER_VAL_COLUMN_ROT_Z+" real,"+
-	 		      EXER_VAL_COLUMN_LIN_X+" real,"+
-	 		      EXER_VAL_COLUMN_LIN_Y+" real,"+
-	 		      EXER_VAL_COLUMN_LIN_Z+" real,"+
-	 		      EXER_VAL_COLUMN_GYRO_X+" real,"+
-	 		      EXER_VAL_COLUMN_GYRO_Y+" real,"+
-	 		      EXER_VAL_COLUMN_GYRO_Z+" real"
-	 		      +")"
-	 	      );
+    		
+	 	      db.execSQL(DB_EXERCISE_SAMPLES);
+	 	      db.execSQL(DB_EXERCISE);
 	 	      
-	 	      db.execSQL(
-	 	    	"create table " + EXER_TABLE_NAME +
-	 	    	"("+EXER_COLUMN_ID+" integer primary key,"+
-	 	    	EXER_COLUMN_NAME +" text,"+
-	 	    	EXER_COLUMN_DESCRIPTION+" text,"
-	 	    	+")");
 	    }
 	    	     
 	       @Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		    // TODO Auto-generated method stub
-			db.execSQL("DROP TABLE IF EXISTS exercises");
+			db.execSQL("DROP TABLE IF EXISTS " + EXER_VAL_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + EXER_TABLE_NAME);
 			onCreate(db);
 		}
 	
 	}//End inner class MyDatabaseHelper
 	
-	public DBmanager open() throws SQLException{
+	public DBmanager open() {
+		DBHelper = new MyDatabaseHelper(context);
     	db = DBHelper.getWritableDatabase();
     	return this;
     }//End SampleDBManager open()

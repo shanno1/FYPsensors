@@ -44,6 +44,14 @@
             android:name=".ExerciseList"
             android:label="@string/title_activity_exercise_list" >
         </activity>
+        <activity
+            android:name=".ViewExerciseList"
+            android:label="@string/title_activity_view_exercise_list" >
+        </activity>
+        <activity
+            android:name=".Itemactivity"
+            android:label="@string/title_activity_itemactivity" >
+        </activity>
     </application>
 
 </manifest>

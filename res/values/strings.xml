@@ -10,5 +10,7 @@
     <string name="exercise_name_">EXERCISE NAME:</string>
     <string name="title_activity_view_exercise">ViewExercise</string>
     <string name="title_activity_exercise_list">ExerciseList</string>
+    <string name="title_activity_view_exercise_list">ViewExerciseList</string>
+    <string name="title_activity_itemactivity">Itemactivity</string>
 
 </resources>
