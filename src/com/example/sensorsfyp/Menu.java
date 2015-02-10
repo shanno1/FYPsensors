@@ -24,18 +24,26 @@ import java.text.DecimalFormat;
 
 public class Menu extends ActionBarActivity{
 
-	private Button Add_Exercise;
+	private Button Add_Exercise, View_Exercise;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         Add_Exercise = (Button)findViewById(R.id.addexercise);
-        
+        View_Exercise = (Button)findViewById(R.id.viewexercise);
         Add_Exercise.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                
                Intent intent = new Intent(Menu.this, Add_Exercise.class);
+               startActivity(intent);
+            }
+        });
+        View_Exercise.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               
+               Intent intent = new Intent(Menu.this, ViewExerciseList.class);
                startActivity(intent);
             }
         });

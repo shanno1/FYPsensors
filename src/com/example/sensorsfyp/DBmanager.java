@@ -1,5 +1,8 @@
 package com.example.sensorsfyp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -112,7 +115,7 @@ public class DBmanager {
       contentValues.put("name", name);
       contentValues.put("description", description);	
 
-      db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
+      db.insert(EXER_TABLE_NAME, null, contentValues);
       db.close();
       return true;
    }
@@ -134,7 +137,7 @@ public class DBmanager {
       contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
       
 
-      db.insert(EXER_TABLE_NAME, null, contentValues);
+      db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
       db.close(); 
       return true;
    }
@@ -143,11 +146,16 @@ public class DBmanager {
       Cursor res =  db.rawQuery( "select "+selectsomething+" from "+fromtable+" where "+wheresomething+"="+equalsomethingelse, null );
       return res;
    }
+   public Cursor getExercise(String name){
+	   return db.query(EXER_TABLE_NAME, new String[] {EXER_COLUMN_ID, EXER_COLUMN_NAME, EXER_COLUMN_DESCRIPTION}, "name = ?", new String[] {name}, null, null, null);
+   }
+   public Cursor getAllExerciseValues(String name){
+	   return db.rawQuery("SELECT * FROM exercisesamples WHERE name = " + name,null);
+   }
    
    public boolean updateExerciseSamples(int id, String name, int seq, float rot_x,float rot_y, 
 		   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
    {
-	      
       ContentValues contentValues = new ContentValues();
       contentValues.put(EXER_VAL_COLUMN_NAME, name);
       contentValues.put(EXER_VAL_COLUMN_SEQUENCE, seq);
@@ -160,10 +168,23 @@ public class DBmanager {
       contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
       contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
       contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
-      db.update(EXER_TABLE_NAME, contentValues, "id = ?", new String[] { Integer.toString(id) } );
+      db.update(EXER_VAL_TABLE_NAME, contentValues, "id = ?", new String[] { Integer.toString(id) } );
       return true;
    }
+   public Cursor getAllExercises(){
+       // Select All Query
+       String selectQuery = "SELECT * FROM " + EXER_TABLE_NAME;
+       Cursor cursor = db.rawQuery(selectQuery, null);
 
+       // looping through all rows and adding to list
+       if (cursor != null) {
+         cursor.moveToFirst();
+       }
+       return cursor;
+   }
+   public Cursor getExercise(int id){
+	   return db.rawQuery("SELECT * FROM " + EXER_TABLE_NAME + " WHERE _id = " + id, null);
+   }
    public Integer deleteTableRow(String table,Integer id)
    {
      

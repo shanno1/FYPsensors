@@ -1,34 +1,47 @@
 package com.example.sensorsfyp;
 
 import android.support.v7.app.ActionBarActivity;
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class ViewExerciseList extends ActionBarActivity {
-
+	public DBmanager db;
+	ListView list;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_view_exercise_list);
+		db = new DBmanager(this);
+		list = (ListView)findViewById(R.id.ExerciseList);
+		db.open();
+		PopulateListview();
+		list.setOnItemClickListener(onListClick);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.view_exercise_list, menu);
-		return true;
+	@SuppressLint("NewApi") public void PopulateListview(){
+		Cursor cursor = db.getAllExercises();
+		String[] fromFieldNames = new String[] {db.EXER_COLUMN_NAME,db.EXER_COLUMN_DESCRIPTION};
+		int[] toViewIDs = new int[] {R.id.textName,R.id.textDesc};
+		SimpleCursorAdapter myCA;
+		myCA = new SimpleCursorAdapter(getBaseContext(),R.layout.activity_itemactivity,cursor,fromFieldNames,toViewIDs,0);
+		list.setAdapter(myCA);
 	}
+	private AdapterView.OnItemClickListener onListClick=new AdapterView.OnItemClickListener() {
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		@Override
+		public void onItemClick(AdapterView<?> parent, View arg1, int position,
+				long id) {
+			Intent i = new Intent(ViewExerciseList.this, ViewExercise.class);
+			i.putExtra("chosen",position);
+			startActivity(i);	
 		}
-		return super.onOptionsItemSelected(item);
-	}
+	};
 }

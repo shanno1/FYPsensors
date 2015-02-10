@@ -9,8 +9,46 @@
     tools:context="com.example.sensorsfyp.ViewExercise" >
 
     <TextView
+        android:id="@+id/textnameview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="NAME: "
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textdescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textnameview"
+        android:layout_below="@+id/textnameview"
+        android:layout_marginTop="26dp"
+        android:text="DESCRIPTION: "
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/exercisedescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textdescription"
+        android:layout_below="@+id/textdescription"
+        android:text="The Exercise Description" />
+
+    <TextView
+        android:id="@+id/exercisename"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textdescription"
+        android:layout_below="@+id/textnameview"
+        android:text="The Exercise Name " />
+
+    <Button
+        android:id="@+id/btnGraph"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/exercisedescription"
+        android:layout_below="@+id/exercisedescription"
+        android:layout_marginTop="29dp"
+        android:text="Sensor Graph" />
 
 </RelativeLayout>

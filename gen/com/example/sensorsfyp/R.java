@@ -1633,12 +1633,13 @@ containing a value of this type.
         public static final int abc_textfield_search_activated_mtrl_alpha=0x7f020030;
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
-        public static final int ic_launcher=0x7f020033;
+        public static final int app_icon=0x7f020033;
+        public static final int ic_launcher=0x7f020034;
     }
     public static final class id {
         public static final int ExerciseDescription=0x7f090046;
         public static final int ExerciseDescriptiontitle=0x7f090045;
-        public static final int ExerciseList=0x7f09004d;
+        public static final int ExerciseList=0x7f090055;
         public static final int ExerciseName=0x7f090044;
         public static final int ExerciseNametitle=0x7f090043;
         public static final int StartRecording=0x7f090042;
@@ -1655,12 +1656,13 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f090030;
         public static final int action_mode_bar_stub=0x7f09002f;
         public static final int action_mode_close_button=0x7f090022;
-        public static final int action_settings=0x7f09004e;
+        public static final int action_settings=0x7f090056;
         public static final int activity_chooser_view_content=0x7f090023;
-        public static final int addexercise=0x7f09004c;
+        public static final int addexercise=0x7f09004e;
         public static final int always=0x7f090014;
         public static final int beginning=0x7f09001b;
         public static final int bottom=0x7f09001e;
+        public static final int btnGraph=0x7f090054;
         public static final int buttonCancel=0x7f09004b;
         public static final int buttonSave=0x7f090049;
         public static final int checkbox=0x7f09002b;
@@ -1673,6 +1675,8 @@ containing a value of this type.
         public static final int edit_query=0x7f090035;
         public static final int elapsedtime=0x7f09004a;
         public static final int end=0x7f09001c;
+        public static final int exercisedescription=0x7f090052;
+        public static final int exercisename=0x7f090053;
         public static final int expand_activities_button=0x7f090024;
         public static final int expanded_menu=0x7f09002a;
         public static final int home=0x7f090000;
@@ -1708,11 +1712,16 @@ containing a value of this type.
         public static final int split_action_bar=0x7f090004;
         public static final int submit_area=0x7f09003e;
         public static final int tabMode=0x7f09000c;
+        public static final int textDesc=0x7f09004d;
+        public static final int textName=0x7f09004c;
         public static final int textNote=0x7f090048;
+        public static final int textdescription=0x7f090051;
+        public static final int textnameview=0x7f090050;
         public static final int title=0x7f090029;
         public static final int top=0x7f09001f;
         public static final int up=0x7f090001;
         public static final int useLogo=0x7f090013;
+        public static final int viewexercise=0x7f09004f;
         public static final int withText=0x7f090018;
         public static final int wrap_content=0x7f090009;
     }
@@ -1767,21 +1776,23 @@ containing a value of this type.
         public static final int abc_simple_dropdown_hint=0x7f030016;
         public static final int activity_add_exercise=0x7f030017;
         public static final int activity_exercise_list=0x7f030018;
-        public static final int activity_itemactivity=0x7f030019;
-        public static final int activity_menu=0x7f03001a;
-        public static final int activity_view_exercise=0x7f03001b;
-        public static final int activity_view_exercise_list=0x7f03001c;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001d;
+        public static final int activity_graph_view=0x7f030019;
+        public static final int activity_itemactivity=0x7f03001a;
+        public static final int activity_menu=0x7f03001b;
+        public static final int activity_view_exercise=0x7f03001c;
+        public static final int activity_view_exercise_list=0x7f03001d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
     }
     public static final class menu {
         public static final int accel=0x7f0c0000;
         public static final int add__exercise=0x7f0c0001;
         public static final int exercise_list=0x7f0c0002;
-        public static final int gyroscrope=0x7f0c0003;
-        public static final int itemactivity=0x7f0c0004;
-        public static final int menu=0x7f0c0005;
-        public static final int view_exercise=0x7f0c0006;
-        public static final int view_exercise_list=0x7f0c0007;
+        public static final int graph_view=0x7f0c0003;
+        public static final int gyroscrope=0x7f0c0004;
+        public static final int itemactivity=0x7f0c0005;
+        public static final int menu=0x7f0c0006;
+        public static final int view_exercise=0x7f0c0007;
+        public static final int view_exercise_list=0x7f0c0008;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1844,6 +1855,7 @@ containing a value of this type.
         public static final int title_activity_accel=0x7f0a0012;
         public static final int title_activity_add__exercise=0x7f0a0014;
         public static final int title_activity_exercise_list=0x7f0a0017;
+        public static final int title_activity_graph_view=0x7f0a001a;
         public static final int title_activity_gyroscrope=0x7f0a0013;
         public static final int title_activity_itemactivity=0x7f0a0019;
         public static final int title_activity_view_exercise=0x7f0a0016;

@@ -6,19 +6,11 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.sensorsfyp.Menu" >
+    tools:context="com.example.sensorsfyp.GraphView" >
 
-<Button
-    android:id="@+id/addexercise"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="38dp"
-    android:text="Add Exercise" />
-<Button
-    android:id="@+id/viewexercise"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="38dp"
-    android:text="View Exercise" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" />
 
 </RelativeLayout>
