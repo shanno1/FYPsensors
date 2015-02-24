@@ -63,33 +63,47 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	private float[] currentRotationMatrixCalibrated= new float[9];
 	private float[] deltaRotationMatrixCalibrated= new float[9];
 	private DBmanager db = new DBmanager(this);
-	private static final int SENSOR_RATE = 50000;
+	private static final int SENSOR_RATE = 500000;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_exercise);
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		
+		
+		//-------------------------------------------------------
+		//UI Initialisation
+		//-------------------------------------------------------
 		name = (EditText)findViewById(R.id.ExerciseName);
 		description = (EditText)findViewById(R.id.ExerciseDescription);
 		elapsedtext = (TextView)findViewById(R.id.elapsedtime);
 		SaveBtn = (Button)findViewById(R.id.buttonSave);
 		CancelBtn = (Button)findViewById(R.id.buttonCancel);
 		Record = (Button)findViewById(R.id.StartRecording);
-		elapsedtext.setText(String.valueOf(5));
+
+		SaveBtn.setEnabled(false);
 		timerBar = (ProgressBar)findViewById(R.id.progressBarTimer);
 		timerBar.setMax(5);
 		timerBar.setIndeterminate(false);
+		elapsedtext.setText(String.valueOf(5));
 		
 		
 		
-		//GETTING LATE CURRENTLY REVISE OVER LOGIC!
+		
+		//-------------------------------------------------------
+		//Button Click Listeners
+		//-------------------------------------------------------
 		Record.setOnClickListener(new OnClickListener(){
 			 @Override
 			 public void onClick(View v) {
 				 if(!recording){
-}
-	             
+					 recording = true;
+					 timerBar.setProgress(5);
+					 countdown =  new TimerCountdown(5000, 1000);
+					 countdown.start();
+					 startsensor();
+				 }
 			 }
 		});
 		SaveBtn.setOnClickListener(new OnClickListener(){
@@ -109,12 +123,15 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 			 @Override
 			 public void onClick(View v) {
 	             finish();
-	             
 			 }
 		});
 		
 	}
 	
+	
+	//-------------------------------------------------------
+	//Sensor Manager Registration
+	//-------------------------------------------------------
 	@SuppressLint("InlinedApi") public void startsensor(){
 	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SENSOR_RATE); 
 	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SENSOR_RATE); 
@@ -125,23 +142,29 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); 
 	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR));
 	}
+	//-------------------------------------------------------
+	
 	
 	public void AddtoArray(String type, float[] array){
 		float[] tempArr = new float[8];
 		if (type=="gyro"){
-			System.out.println("Gyro X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
+			//System.out.println("Gyro X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
 			GyroArr.add(array);
 		}
 		else if (type=="rot"){
-			System.out.println("Rot X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
+			//System.out.println("Rot X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
 			RotArr.add(array);
 		}
 		else if (type=="accel"){
-			System.out.println("Accel X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
+			//System.out.println("Accel X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
 			AccelArr.add(array);
 			
 		}
 	}
+	
+	//-------------------------------------------------------
+	//5 second clock timer for exercise recording 
+	//-------------------------------------------------------
 	public class TimerCountdown extends CountDownTimer {
    	
 		 public TimerCountdown(long millisInFuture, long countDownInterval) {
@@ -168,6 +191,7 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 			  countacc = 0;
 			  countgyro = 0;
 			  Record.setText("Start Recording Exercise");
+			  SaveBtn.setEnabled(true);
 		  }
 	 }  
 		 
@@ -187,9 +211,9 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		}
 		//GYROSCOPE
 		if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-			//AddtoArray("gyro",event.values);
+			AddtoArray("gyro",event.values);
 	    	countgyro++;
-	    //	System.out.println("Gyro sensor count: "+ countgyro);
+	    	System.out.println("Gyro sensor count: "+ countgyro);
 	    }
 		//ROTATION VECTOR
 		if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
@@ -260,18 +284,15 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	
 	public void WritetoDatabase(){
 		//initialise the database
-		int i =0;
-		try{
-		
 		db.open();
-		}catch (SQLiteException e) {
-	        Toast.makeText(this, "opening the db isn't working", 1).show();
-	    }
+		int i =0;
+		
 		//Version 1 - try with no null values - test to see values in action
 		try{
 			Iterator<float[]> aIt = AccelArr.iterator();
 			Iterator<float[]> bIt = GyroArr.iterator();
 			Iterator<float[]> cIt = RotArr.iterator();
+			
 			
 			// assumes all the lists have the same size
 			while(aIt.hasNext() && bIt.hasNext() && cIt.hasNext())
@@ -280,18 +301,21 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 				gyro = GyroArr.get(i);
 				acc = AccelArr.get(i);
 				
-				db.insertToExerciseSample(String.valueOf(name.getText()), i, rot[0], rot[1], rot[2], acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2]);
+				db.insertToExerciseSample(name.getText().toString(), i, rot[0], rot[1], rot[2], acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2]);
 				i++;
 			}
+			System.out.println(name.getText().toString());
+			System.out.println(description.getText().toString());
+			db.insertToExercise(name.getText().toString(), description.getText().toString());	
 			
 		}
 		
 		 catch (SQLiteException e) {
 	        Toast.makeText(this, "insert isn't working", 1).show();
 	    }
-		if(String.valueOf(name.getText())!="" && String.valueOf(description.getText())!=""){
-		//	db.insertToExercise(String.valueOf(name.getText()), String.valueOf(description.getText()));	//Version 2 - Test with different body types - check values
-		}
+		
+		//Version 2 - Test with different body types - check values
+		
 		//Version 3 - Take null values away if still feasible
 		
 		

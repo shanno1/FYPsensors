@@ -27,8 +27,6 @@
 		        android:layout_below="@+id/ExerciseNametitle"
 		        android:ems="14"
 		        android:inputType="textCapCharacters" >
-		
-		        <requestFocus />
 		    </EditText>
 		
 		    <TextView

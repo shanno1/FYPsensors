@@ -12,13 +12,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class ViewExercise extends ActionBarActivity {
-	int chosenPosition;    
-	Bundle extras = getIntent().getExtras();
+	int pos;    
 	private DBmanager db;
 	TextView nameView,descView;
 	Button Graph;
-	String name;
-	
+	String name,desc;
 	//---------------------------------------
 	//nickf's iterative search algorithm
 	//Research it and see if any help
@@ -38,15 +36,16 @@ public class ViewExercise extends ActionBarActivity {
 		descView = (TextView)findViewById(R.id.exercisedescription);
 		Graph = (Button)findViewById(R.id.btnGraph);
 		
-		if (extras != null) {
-		    //Here you get the id from the item
-		    chosenPosition= (int)extras.getInt("chosen");
-		}
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) 
+		  pos = extras.getInt("id");
 		//Here you use the id to get the object from your database or whatever
-		Cursor c = db.getExercise(chosenPosition+ 1);
-		c.moveToFirst();
-		name = c.getString(1);
-		String desc = c.getString(2);
+		Cursor c = db.getExercise(pos);
+		for(c.moveToFirst();!c.isAfterLast(); c.moveToNext()){
+			name = c.getString(c.getColumnIndex("name"));
+			desc = c.getString(c.getColumnIndex("description"));
+		}
+		
 		nameView.setText(name);
 		descView.setText(desc);
 		Graph.setOnClickListener(new OnClickListener(){

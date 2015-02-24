@@ -83,7 +83,7 @@ public class DBmanager {
     		
 	 	      db.execSQL(DB_EXERCISE_SAMPLES);
 	 	      db.execSQL(DB_EXERCISE);
-	 	      
+	 	      System.out.println("DB is created");
 	    }
 	    	     
 	       @Override
@@ -92,6 +92,7 @@ public class DBmanager {
 			db.execSQL("DROP TABLE IF EXISTS " + EXER_VAL_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + EXER_TABLE_NAME);
 			onCreate(db);
+			System.out.println("DB is updated");
 		}
 	
 	}//End inner class MyDatabaseHelper
@@ -99,25 +100,26 @@ public class DBmanager {
 	public DBmanager open() {
 		DBHelper = new MyDatabaseHelper(context);
     	db = DBHelper.getWritableDatabase();
+    	System.out.println("DB is opened");
     	return this;
     }//End SampleDBManager open()
     
     public void close(){
     	DBHelper.close();
+    	System.out.println("DB is closed");
     }//End close DBHelper method
     
 	    
 	   
-   public boolean insertToExercise(String name, String description)
+   public long insertToExercise(String name, String description)
    {
       ContentValues contentValues = new ContentValues();
 
-      contentValues.put("name", name);
-      contentValues.put("description", description);	
-
-      db.insert(EXER_TABLE_NAME, null, contentValues);
-      db.close();
-      return true;
+      contentValues.put(EXER_COLUMN_NAME, name);
+      contentValues.put(EXER_COLUMN_DESCRIPTION, description);	
+      
+      
+      return db.insert(EXER_TABLE_NAME, null, contentValues);
    }
    public boolean insertToExerciseSample(String name, int seq, float rot_x,float rot_y, 
 		   float rot_z,float lin_x,float lin_y,float lin_z,float gyro_x,float gyro_y,float gyro_z)
@@ -138,7 +140,7 @@ public class DBmanager {
       
 
       db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
-      db.close(); 
+       
       return true;
    }
    public Cursor customQuery(String selectsomething,String fromtable,String wheresomething,int equalsomethingelse){

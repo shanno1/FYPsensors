@@ -23,7 +23,15 @@ public class ViewExerciseList extends ActionBarActivity {
 		list = (ListView)findViewById(R.id.ExerciseList);
 		db.open();
 		PopulateListview();
-		list.setOnItemClickListener(onListClick);
+		list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent i = new Intent(ViewExerciseList.this, ViewExercise.class);
+				i.putExtra("id",position);
+				startActivity(i);	
+			}
+		});
 	}
 
 	@SuppressLint("NewApi") public void PopulateListview(){
@@ -34,14 +42,5 @@ public class ViewExerciseList extends ActionBarActivity {
 		myCA = new SimpleCursorAdapter(getBaseContext(),R.layout.activity_itemactivity,cursor,fromFieldNames,toViewIDs,0);
 		list.setAdapter(myCA);
 	}
-	private AdapterView.OnItemClickListener onListClick=new AdapterView.OnItemClickListener() {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View arg1, int position,
-				long id) {
-			Intent i = new Intent(ViewExerciseList.this, ViewExercise.class);
-			i.putExtra("chosen",position);
-			startActivity(i);	
-		}
-	};
+	
 }
