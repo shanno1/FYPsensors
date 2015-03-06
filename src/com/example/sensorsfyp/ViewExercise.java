@@ -40,7 +40,7 @@ public class ViewExercise extends ActionBarActivity {
 		if (extras != null) 
 		  pos = extras.getInt("id");
 		//Here you use the id to get the object from your database or whatever
-		Cursor c = db.getExercise(pos);
+		Cursor c = db.getExercise(pos+1);
 		for(c.moveToFirst();!c.isAfterLast(); c.moveToNext()){
 			name = c.getString(c.getColumnIndex("name"));
 			desc = c.getString(c.getColumnIndex("description"));
@@ -50,8 +50,8 @@ public class ViewExercise extends ActionBarActivity {
 		descView.setText(desc);
 		Graph.setOnClickListener(new OnClickListener(){
 			public void onClick(View v){
-				Intent i = new Intent(ViewExercise.this,GraphView.class);
-				i.putExtra("exercise", name);
+				Intent i = new Intent(ViewExercise.this, SensorValueListView.class);
+				i.putExtra("name",name);
 				startActivity(i);
 			}
 		});

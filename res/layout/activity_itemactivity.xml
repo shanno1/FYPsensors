@@ -9,7 +9,7 @@
     tools:context="com.example.sensorsfyp.Itemactivity" >
 
     <TextView
-        android:id="@+id/textName"
+        android:id="@+id/SeqText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,8 +21,8 @@
         android:id="@+id/textDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textName"
-        android:layout_below="@+id/textName"
+        android:layout_alignLeft="@+id/SeqText"
+        android:layout_below="@+id/SeqText"
         android:text="Some Text Here" />
 
 </RelativeLayout>

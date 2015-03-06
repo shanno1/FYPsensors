@@ -3,8 +3,10 @@ package com.example.sensorsfyp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 
 import android.support.v7.app.ActionBarActivity;
 import android.annotation.SuppressLint;
@@ -37,12 +39,16 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	private Boolean recording=false;
 	TimerCountdown countdown;
 	private EditText name,description;
+	private long timecompare;
+	
 	
 	//Read in sensor values temp storage
 	private int countacc=0,countgyro=0,countrot=0,count = 0;
 	private ArrayList<float[]> GyroArr = new ArrayList<float[]>();
-	private ArrayList<float[]> RotArr = new ArrayList<float[]>();
-	private ArrayList<float[]> AccelArr = new ArrayList<float[]>();
+	private List<float[]> RotArr = new ArrayList<float[]>();
+	private List<float[]> AccelArr = new ArrayList<float[]>();
+	
+	
 	//SENSOR ACTIVATION and EDITING value
 	private SensorManager mSensorManager;
 	private float timeConstant = 0.18f;
@@ -51,7 +57,8 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	// Timestamps for the low-pass filters
 	private float timestamp = System.nanoTime();
 	private float timestampOld = System.nanoTime();
-	private DecimalFormat df = new DecimalFormat("#.######");
+	private DecimalFormat df = new DecimalFormat("0.00000");
+	private DecimalFormat dfrot = new DecimalFormat("00.00");
 	// Gravity and linear accelerations components for the Wikipedia version of the low-pass filter 
 	private float[] gravity = new float[]
 	{ 0, 0, 0 };
@@ -63,7 +70,9 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	private float[] currentRotationMatrixCalibrated= new float[9];
 	private float[] deltaRotationMatrixCalibrated= new float[9];
 	private DBmanager db = new DBmanager(this);
-	private static final int SENSOR_RATE = 500000;
+	private static final int SENSOR_RATE = 700000;
+	int progress;
+	CompareAlg compare = new CompareAlg();
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -103,6 +112,7 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 					 countdown =  new TimerCountdown(5000, 1000);
 					 countdown.start();
 					 startsensor();
+					 Record.setEnabled(false);
 				 }
 			 }
 		});
@@ -125,12 +135,11 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	             finish();
 			 }
 		});
-		
 	}
 	
 	
 	//-------------------------------------------------------
-	//Sensor Manager Registration
+	//Sensor Manager start/stop sensorListener 
 	//-------------------------------------------------------
 	@SuppressLint("InlinedApi") public void startsensor(){
 	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SENSOR_RATE); 
@@ -138,29 +147,11 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	    mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), SENSOR_RATE);
 	}
 	@SuppressLint("InlinedApi") public void stopsensor(){
-		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)); 
-	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)); 
+		mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
 	    mSensorManager.unregisterListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR));
 	}
-	//-------------------------------------------------------
-	
-	
-	public void AddtoArray(String type, float[] array){
-		float[] tempArr = new float[8];
-		if (type=="gyro"){
-			//System.out.println("Gyro X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
-			GyroArr.add(array);
-		}
-		else if (type=="rot"){
-			//System.out.println("Rot X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
-			RotArr.add(array);
-		}
-		else if (type=="accel"){
-			//System.out.println("Accel X: "+ array[0] + "\nY: " +array[1] + "\n Z: " + array[2]);
-			AccelArr.add(array);
-			
-		}
-	}
+
 	
 	//-------------------------------------------------------
 	//5 second clock timer for exercise recording 
@@ -174,7 +165,8 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		 
 		  @Override
 		  public void onTick(long millisUntilFinished) {
-			  int progress = (int) (millisUntilFinished/1000);
+			  timecompare= millisUntilFinished;
+			  progress = (int) (millisUntilFinished/1000);
 			  elapsedtext.setText(String.valueOf(progress));
 			  timerBar.setProgress(progress);
 		  }
@@ -184,55 +176,83 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 			  elapsedtext.setText("Finished");
 			  timerBar.setProgress(0);
 			  stopsensor();
-			  recording=false;
-			  //WritetoDatabase();
-			  Record.setEnabled(true);
+			  recording=false; 
+			  
+			  if(countacc == countrot){
+				  if(!compare.betweenInt(countacc, 29, 27)){
+					  Record.setEnabled(true);
+					  Record.setText("Repeat Exercise");
+					  SaveBtn.setEnabled(false);
+					  RotArr.clear();
+					  AccelArr.clear();
+				  }
+				  else{
+					  Record.setEnabled(false);
+					  Record.setText("Successful!");
+					  SaveBtn.setEnabled(true);
+				  }
+			  }
+			  else{
+				  Record.setEnabled(true);
+				  Record.setText("Repeat Exercise");
+				  SaveBtn.setEnabled(false);
+				  RotArr.clear();
+				  AccelArr.clear();
+			  }
 			  countrot = 0;
 			  countacc = 0;
 			  countgyro = 0;
-			  Record.setText("Start Recording Exercise");
-			  SaveBtn.setEnabled(true);
 		  }
 	 }  
-		 
+	//----------------------------------------------------------
 	//SENSORS UPDATE METHOD 
+	//----------------------------------------------------------
 	@SuppressLint("NewApi") 
 	public void onSensorChanged(SensorEvent event){
-    	float[] accelerometervalues;
-		float[] orientationVals = new float[3];
 		
-		//LINEAR ACCELEROMETER
-		if(event.sensor.getType()== Sensor.TYPE_ACCELEROMETER){
-            accelerometervalues = addLinearAcc(event.values.clone());
-            
-            AddtoArray("accel",accelerometervalues);
-            countacc++;
-            System.out.println("Accel sensor count: "+ countacc);
-		}
-		//GYROSCOPE
-		if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-			AddtoArray("gyro",event.values);
-	    	countgyro++;
-	    	System.out.println("Gyro sensor count: "+ countgyro);
-	    }
-		//ROTATION VECTOR
-		if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
-			// Convert the rotation-vector to a 4x4 matrix.
-	        SensorManager.getRotationMatrixFromVector(currentRotationMatrixCalibrated, event.values);
-	        SensorManager.remapCoordinateSystem(currentRotationMatrixCalibrated,
-	                    SensorManager.AXIS_X, SensorManager.AXIS_Z,
-	                    deltaRotationMatrixCalibrated);
-	        SensorManager.getOrientation(deltaRotationMatrixCalibrated, orientationVals);
+		//use timeDelta to control the refresh rate
+    	float[] accelerometervalues = new float[3];
+		float[] orientationVals = new float[3];
+		switch(event.sensor.getType()){
+			case Sensor.TYPE_ACCELEROMETER: 
+				//returns float array with x,y and z sensor values directly added into arraylist
+				AccelArr.add(addLinearAcc(event.values.clone()));
+	            //Debugging with system.out msgs
+				
+				System.out.println("Accel X: "+ addLinearAcc(event.values.clone())[0] + "\nY: " +addLinearAcc(event.values.clone())[1] + "\n Z: " + addLinearAcc(event.values.clone())[2]);
+	            System.out.println("Accel sensor count: "+ countacc);
+	            countacc++;
+				break;
+				
+				
+				//Gyroscope is halted due to unforseen errors and will try to make work without.
+			/*case Sensor.TYPE_GYROSCOPE:
+				AddtoArray("gyro",event.values);
+				for(int i = 0; i<40000; i++){}
+		    	countgyro++;
+		    	
+				break;
+				*/
+			case Sensor.TYPE_ROTATION_VECTOR:
+				// Convert the rotation-vector to a 4x4 matrix.
+		        SensorManager.getRotationMatrixFromVector(currentRotationMatrixCalibrated, event.values);
+		        SensorManager.remapCoordinateSystem(currentRotationMatrixCalibrated,
+		                    SensorManager.AXIS_X, SensorManager.AXIS_Z,
+		                    deltaRotationMatrixCalibrated);
+		        SensorManager.getOrientation(deltaRotationMatrixCalibrated, orientationVals);
 
-	        // Optionally convert the result from radians to degrees
-	        orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
-	        orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
-	        orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
-	        
-	        AddtoArray("rot",orientationVals);
-	        countrot++;
-	        System.out.println("Rot sensor count: "+ countrot);
+		        // Optionally convert the result from radians to degrees
+		        orientationVals[0] = (float) Math.toDegrees(orientationVals[0]);
+		        orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
+		        orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
+		      //  System.out.println("Accel X: "+ orientationVals[0] + "\nY: " +orientationVals[1] + "\n Z: " + orientationVals[2]);
+		        RotArr.add(orientationVals);
+		        countrot++;
+		        System.out.println("Rot sensor count: "+ countrot);
+				break;
+			
 		}
+		
 		
     }
 
@@ -278,41 +298,41 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	Another way is to have a start and end identifier which could also be a 0.
 	Reason for choosing 0 is because means no movement and the sensor will never have a straight 0 value, will always have 0.0001 of something.
 	*/
-	private float[] gyro = new float[2];
-	private float[] rot = new float[2];
-	private float[] acc = new float[2];
+	private float[] gyro = new float[3];
+	private float[] rot = new float[3];
+	private float[] acc = new float[3];
 	
+	//-------------------------------------------------
+	//This is where the data is all written to the database
+	//-------------------------------------------------
 	public void WritetoDatabase(){
 		//initialise the database
 		db.open();
-		int i =0;
+		
 		
 		//Version 1 - try with no null values - test to see values in action
-		try{
-			Iterator<float[]> aIt = AccelArr.iterator();
-			Iterator<float[]> bIt = GyroArr.iterator();
-			Iterator<float[]> cIt = RotArr.iterator();
+		
+		Iterator<float[]> aIt = AccelArr.iterator();
+		//Iterator<float[]> bIt = GyroArr.iterator();
+		Iterator<float[]> bIt = RotArr.iterator();
+		
+		
+		// assumes all the lists have the same size
+		for(int i = 0;AccelArr.size()>i && RotArr.size()>i;i++)
+		{
 			
+			//debugging
+			System.out.println("Accel X: "+ acc[0] + "\nY: " +acc[1] + "\n Z: " + acc[2]);
+			System.out.println("index num: "+ i);
 			
-			// assumes all the lists have the same size
-			while(aIt.hasNext() && bIt.hasNext() && cIt.hasNext())
-			{
-				rot =  RotArr.get(i);
-				gyro = GyroArr.get(i);
-				acc = AccelArr.get(i);
-				
-				db.insertToExerciseSample(name.getText().toString(), i, rot[0], rot[1], rot[2], acc[0], acc[1], acc[2], gyro[0], gyro[1], gyro[2]);
-				i++;
-			}
-			System.out.println(name.getText().toString());
-			System.out.println(description.getText().toString());
-			db.insertToExercise(name.getText().toString(), description.getText().toString());	
+			//Database insert for each row of sensor values
+			db.insertToExerciseSample(name.getText().toString(), i, RotArr.get(i)[0], RotArr.get(i)[1], RotArr.get(i)[2], AccelArr.get(i)[0], AccelArr.get(i)[1], AccelArr.get(i)[2], 0.0f,0.0f,0.0f);
 			
 		}
+		System.out.println(name.getText().toString());
+		System.out.println(description.getText().toString());
+		db.insertToExercise(name.getText().toString(), description.getText().toString());	
 		
-		 catch (SQLiteException e) {
-	        Toast.makeText(this, "insert isn't working", 1).show();
-	    }
 		
 		//Version 2 - Test with different body types - check values
 		
@@ -322,7 +342,7 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		//Final Version
 		
 		
-		i=0;
+		Toast.makeText(this,name.getText().toString() + " has been saved!", 1).show();
 		//closing database
 		db.close();
 	}

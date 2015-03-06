@@ -27,9 +27,9 @@ public class DBmanager {
 	public static final String EXER_VAL_COLUMN_LIN_X = "lin_x";
 	public static final String EXER_VAL_COLUMN_LIN_Y = "lin_y";
 	public static final String EXER_VAL_COLUMN_LIN_Z = "lin_z";
-	public static final String EXER_VAL_COLUMN_GYRO_X = "gyro_x";
+	/*public static final String EXER_VAL_COLUMN_GYRO_X = "gyro_x";
 	public static final String EXER_VAL_COLUMN_GYRO_Y = "gyro_y";
-	public static final String EXER_VAL_COLUMN_GYRO_Z = "gyro_z";
+	public static final String EXER_VAL_COLUMN_GYRO_Z = "gyro_z";*/
 	public static final int DATABASE_VERSION = 1;
 	
 	//List of exercises table
@@ -49,12 +49,11 @@ public class DBmanager {
 	    EXER_VAL_COLUMN_ROT_Z+" REAL NOT NULL, "+
 	    EXER_VAL_COLUMN_LIN_X+" REAL NOT NULL, "+
 	    EXER_VAL_COLUMN_LIN_Y+" REAL NOT NULL, "+
-	    EXER_VAL_COLUMN_LIN_Z+" REAL NOT NULL, "+
-	    EXER_VAL_COLUMN_GYRO_X+" REAL NOT NULL, "+
-	    EXER_VAL_COLUMN_GYRO_Y+" REAL NOT NULL, "+
-	    EXER_VAL_COLUMN_GYRO_Z+" REAL NOT NULL);";
-
-	public static final String DB_EXERCISE =
+	    EXER_VAL_COLUMN_LIN_Z+" REAL NOT NULL);";
+		/* EXER_VAL_COLUMN_GYRO_X+" REAL NOT NULL, "+
+		    EXER_VAL_COLUMN_GYRO_Y+" REAL NOT NULL, "+
+		    EXER_VAL_COLUMN_GYRO_Z+" REAL NOT NULL
+*/	public static final String DB_EXERCISE =
     	"create table " + EXER_TABLE_NAME +" ("
     	+EXER_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
     	EXER_COLUMN_NAME +" TEXT NOT NULL, "+
@@ -134,9 +133,9 @@ public class DBmanager {
       contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
       contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
       contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
-      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
+      /*contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
       contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
-      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);*/
       
 
       db.insert(EXER_VAL_TABLE_NAME, null, contentValues);
@@ -152,7 +151,7 @@ public class DBmanager {
 	   return db.query(EXER_TABLE_NAME, new String[] {EXER_COLUMN_ID, EXER_COLUMN_NAME, EXER_COLUMN_DESCRIPTION}, "name = ?", new String[] {name}, null, null, null);
    }
    public Cursor getAllExerciseValues(String name){
-	   return db.rawQuery("SELECT * FROM exercisesamples WHERE name = " + name,null);
+	   return db.rawQuery("SELECT * FROM "+EXER_VAL_TABLE_NAME+" WHERE name = ? ORDER BY " + EXER_VAL_COLUMN_SEQUENCE,new String [] {name});
    }
    
    public boolean updateExerciseSamples(int id, String name, int seq, float rot_x,float rot_y, 
@@ -167,9 +166,9 @@ public class DBmanager {
       contentValues.put(EXER_VAL_COLUMN_LIN_X, lin_x);
       contentValues.put(EXER_VAL_COLUMN_LIN_Y, lin_y);
       contentValues.put(EXER_VAL_COLUMN_LIN_Z, lin_z);
-      contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
+      /*contentValues.put(EXER_VAL_COLUMN_GYRO_X, gyro_x);
       contentValues.put(EXER_VAL_COLUMN_GYRO_Y, gyro_y);
-      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);
+      contentValues.put(EXER_VAL_COLUMN_GYRO_Z, gyro_z);*/
       db.update(EXER_VAL_TABLE_NAME, contentValues, "id = ?", new String[] { Integer.toString(id) } );
       return true;
    }

@@ -34,10 +34,11 @@ public class ViewExerciseList extends ActionBarActivity {
 		});
 	}
 
-	@SuppressLint("NewApi") public void PopulateListview(){
+	@SuppressLint("NewApi") 
+	public void PopulateListview(){
 		Cursor cursor = db.getAllExercises();
 		String[] fromFieldNames = new String[] {db.EXER_COLUMN_NAME,db.EXER_COLUMN_DESCRIPTION};
-		int[] toViewIDs = new int[] {R.id.textName,R.id.textDesc};
+		int[] toViewIDs = new int[] {R.id.SeqText,R.id.textDesc};
 		SimpleCursorAdapter myCA;
 		myCA = new SimpleCursorAdapter(getBaseContext(),R.layout.activity_itemactivity,cursor,fromFieldNames,toViewIDs,0);
 		list.setAdapter(myCA);
