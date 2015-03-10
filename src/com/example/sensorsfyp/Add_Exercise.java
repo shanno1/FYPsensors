@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
-
+import java.math.*;
 import android.support.v7.app.ActionBarActivity;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -44,10 +44,9 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 	
 	//Read in sensor values temp storage
 	private int countacc=0,countgyro=0,countrot=0,count = 0;
-	private ArrayList<float[]> GyroArr = new ArrayList<float[]>();
-	private List<float[]> RotArr = new ArrayList<float[]>();
-	private List<float[]> AccelArr = new ArrayList<float[]>();
-	
+	//private ArrayList<Tuple3f> GyroArr = new ArrayList<Tuple3f>();
+	private List<Vector3> RotArr = new ArrayList<Vector3>();
+	private List<Vector3> AccelArr = new ArrayList<Vector3>();
 	
 	//SENSOR ACTIVATION and EDITING value
 	private SensorManager mSensorManager;
@@ -79,8 +78,7 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		setContentView(R.layout.activity_add_exercise);
 		
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-		
-		
+	
 		//-------------------------------------------------------
 		//UI Initialisation
 		//-------------------------------------------------------
@@ -96,7 +94,6 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		timerBar.setMax(5);
 		timerBar.setIndeterminate(false);
 		elapsedtext.setText(String.valueOf(5));
-		
 		
 		
 		
@@ -215,11 +212,11 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		float[] orientationVals = new float[3];
 		switch(event.sensor.getType()){
 			case Sensor.TYPE_ACCELEROMETER: 
-				//returns float array with x,y and z sensor values directly added into arraylist
-				AccelArr.add(addLinearAcc(event.values.clone()));
+				accelerometervalues=addLinearAcc(event.values.clone());
+				AccelArr.add(new Vector3(accelerometervalues));
 	            //Debugging with system.out msgs
 				
-				System.out.println("Accel X: "+ addLinearAcc(event.values.clone())[0] + "\nY: " +addLinearAcc(event.values.clone())[1] + "\n Z: " + addLinearAcc(event.values.clone())[2]);
+				System.out.println("Accel X: "+ accelerometervalues[0] + "\nY: " +accelerometervalues[1] + "\n Z: " + accelerometervalues[2]);
 	            System.out.println("Accel sensor count: "+ countacc);
 	            countacc++;
 				break;
@@ -246,9 +243,11 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		        orientationVals[1] = (float) Math.toDegrees(orientationVals[1]);
 		        orientationVals[2] = (float) Math.toDegrees(orientationVals[2]);
 		      //  System.out.println("Accel X: "+ orientationVals[0] + "\nY: " +orientationVals[1] + "\n Z: " + orientationVals[2]);
-		        RotArr.add(orientationVals);
-		        countrot++;
+		    
+		        RotArr.add(new Vector3(orientationVals));
 		        System.out.println("Rot sensor count: "+ countrot);
+		        countrot++;
+		        
 				break;
 			
 		}
@@ -312,21 +311,17 @@ public class Add_Exercise extends ActionBarActivity implements SensorEventListen
 		
 		//Version 1 - try with no null values - test to see values in action
 		
-		Iterator<float[]> aIt = AccelArr.iterator();
-		//Iterator<float[]> bIt = GyroArr.iterator();
-		Iterator<float[]> bIt = RotArr.iterator();
-		
-		
 		// assumes all the lists have the same size
 		for(int i = 0;AccelArr.size()>i && RotArr.size()>i;i++)
 		{
-			
+			Vector3 r = RotArr.get(i);
+			Vector3 a = AccelArr.get(i);
 			//debugging
 			System.out.println("Accel X: "+ acc[0] + "\nY: " +acc[1] + "\n Z: " + acc[2]);
 			System.out.println("index num: "+ i);
 			
 			//Database insert for each row of sensor values
-			db.insertToExerciseSample(name.getText().toString(), i, RotArr.get(i)[0], RotArr.get(i)[1], RotArr.get(i)[2], AccelArr.get(i)[0], AccelArr.get(i)[1], AccelArr.get(i)[2], 0.0f,0.0f,0.0f);
+			db.insertToExerciseSample(name.getText().toString(), i, r.getX(), r.getY(), r.getZ(), a.getX(), a.getY(), a.getZ(), 0.0f,0.0f,0.0f);
 			
 		}
 		System.out.println(name.getText().toString());

@@ -37,7 +37,12 @@ public class DBmanager {
    	public static final String EXER_COLUMN_ID = "_id";
    	public static final String EXER_COLUMN_NAME = "name";
    	public static final String EXER_COLUMN_DESCRIPTION = "description";
+   	public static final String EXER_COLUMN_MUSCLE = "muscles_targetted";
+   	public static final String EXER_COLUMN_STRAP_POS = "strappos";
    	
+	public static final String ROUTE_TABLE_NAME = "sampleroutine";
+   	public static final String ROUTE_COLUMN_ID = "_id";
+   	public static final String ROUTE_COLUMN_NAME = "name";
    	//create tables
    	public static final String DB_EXERCISE_SAMPLES = 
 		"CREATE TABLE " + EXER_VAL_TABLE_NAME +
@@ -58,7 +63,13 @@ public class DBmanager {
     	+EXER_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
     	EXER_COLUMN_NAME +" TEXT NOT NULL, "+
     	EXER_COLUMN_DESCRIPTION+" TEXT NOT NULL);";
-    // other attributes
+
+	public static final String DB_EXERCISE_ROUTINE =
+		"create table " + ROUTE_TABLE_NAME +" ("
+		+ROUTE_COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+
+		ROUTE_COLUMN_NAME +" TEXT NOT NULL);";
+
+	// other attributes
     private final Context  context; 
     private MyDatabaseHelper DBHelper;
     private SQLiteDatabase db;
@@ -109,7 +120,7 @@ public class DBmanager {
     }//End close DBHelper method
     
 	    
-	   
+   //insert into 
    public long insertToExercise(String name, String description)
    {
       ContentValues contentValues = new ContentValues();
